@@ -10,4 +10,7 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<TaskItem> Tasks { get; set; }
+    
+    // O User deve ser uma tabela reconhecida
+    public DbSet<User> Users { get; set; }
 }
