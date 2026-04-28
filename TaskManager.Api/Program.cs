@@ -37,6 +37,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateLifetime = true
     };
 });
+builder.Services.AddScoped<ITokenService, TokenService>();
 // ----------------------------------------------------------------------------
 
 var app = builder.Build();

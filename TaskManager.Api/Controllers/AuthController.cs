@@ -14,9 +14,9 @@ namespace TaskManager.Api.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly AppDbContext _context;
-    private readonly TokenService _tokenService;
+    private readonly ITokenService _tokenService;
 
-    public AuthController(AppDbContext context, TokenService tokenService) {
+    public AuthController(AppDbContext context, ITokenService tokenService) {
         _context = context;
         _tokenService = tokenService;
     }
@@ -52,7 +52,7 @@ public class AuthController : ControllerBase
         if (user == null) return Unauthorized("Usuário ou senha inválidos.");
 
         // 3. Comparar a senha enviada com a hash guardada no banco
-        if (BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash)) return Unauthorized("User ou senha inválidos");
+        if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash)) return Unauthorized("User ou senha inválidos");
 
         // Atribuímos o token ao user
         return Ok(_tokenService.CreateToken(user));
