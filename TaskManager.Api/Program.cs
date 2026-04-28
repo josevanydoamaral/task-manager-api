@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using TaskManager.Api.BackgroundServices;
 using TaskManager.Api.Data;
 using TaskManager.Api.Repositories;
 
@@ -38,6 +39,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 builder.Services.AddScoped<ITokenService, TokenService>();
+// ----------------------------------------------------------------------------
+
+builder.Services.AddHostedService<TaskMonitorWorker>();
+
 // ----------------------------------------------------------------------------
 
 var app = builder.Build();
