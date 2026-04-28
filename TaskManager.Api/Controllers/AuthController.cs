@@ -25,7 +25,7 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<User>> Register(RegisterDto registerDto)
     {
         // 1. Verificar se o nome já existe
-        if (await _context.Users.AnyAsync(u => u.Username == registerDto.Username.ToLower()))
+        if (await _context.Users.AnyAsync(u => string.Equals(u.Username, registerDto.Username)))
             return BadRequest("Esse usuário já está ocupado.");
 
         // 2. Criar o usuário e encriptar a password
@@ -42,5 +42,20 @@ public class AuthController : ControllerBase
         return Ok("User criado com sucesso");
     }
 
+    [HttpPost("login")]
+    public async Task<ActionResult<User>> Login(LoginDto loginDto)
+    {
+        // 1. Procurar o usuário pelo nome
+        var user = await _context.Users.SingleOrDefaultAsync(u => string.Equals(u.Username,loginDto.Username));
+
+        // 2. Verificar se o user é nulo e mostrar erro
+        if (user == null) return Unauthorized("Usuário ou senha inválidos.");
+
+        // 3. Comparar a senha enviada com a hash guardada no banco
+        if (BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash)) return Unauthorized("User ou senha inválidos");
+
+        // Atribuímos o token ao user
+        return Ok(_tokenService.CreateToken(user));
+    }
     
 }

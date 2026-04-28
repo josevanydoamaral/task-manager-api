@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Api.Models;
 using TaskManager.Api.Repositories;
@@ -5,9 +6,10 @@ using TaskManager.Api.Repositories;
 
 namespace TaskManager.Api.Controllers;
 
+// significa que a rota é protegida e necessita de autorização
+[Authorize]
 // Avisa o .Net que isso é uma Api e que deve tratar erros automaticamente
 [ApiController]
-
 [Route("api/[controller]")]
 
 public class TasksController : ControllerBase
